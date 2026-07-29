@@ -46,7 +46,7 @@ jobs:
       - name: Check the build produced what we expect
         run: |
           set -euo pipefail
-          for path in index.html 404.html pipeline/index.html resume/index.html projects/index.html sitemap-index.xml; do
+          for path in index.html 404.html pipeline/index.html resume/index.html projects/index.html working-with-ai/index.html sitemap-index.xml; do
             if [ ! -f "public/${path}" ]; then
               echo "::error::public/${path} missing from the build output"
               exit 1

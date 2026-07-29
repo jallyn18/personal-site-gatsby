@@ -29,9 +29,9 @@ const siteUrl = (process.env.SITE_URL || "http://localhost:8000").replace(/\/$/,
 
 module.exports = {
   siteMetadata: {
-    title: "TODO: Your Name",
+    title: "Jon Allyn",
     description:
-      "TODO: One-sentence description used for search results and link previews.",
+      "Lead Systems Engineer automating on-premises data center infrastructure with Terraform, Ansible and Python — and leading a team that develops 100% of its code with AI.",
     siteUrl,
     buildInfo,
   },

@@ -19,11 +19,11 @@ const IndexPage = () => {
         <p className="tagline">{profile.tagline}</p>
 
         <div className="actions">
-          <Link className="btn btn-primary" to="/resume/">
-            Read the resume
+          <Link className="btn btn-primary" to="/working-with-ai/">
+            How my team builds with AI
           </Link>
-          <Link className="btn" to="/pipeline/">
-            How this site ships
+          <Link className="btn" to="/resume/">
+            Read the resume
           </Link>
           {primaryLinks.map((link) => (
             <a key={link.label} className="btn" href={link.href}>
@@ -46,6 +46,22 @@ const IndexPage = () => {
         {profile.summary.map((paragraph) => (
           <p key={paragraph.slice(0, 40)}>{paragraph}</p>
         ))}
+      </section>
+
+      <section>
+        <h2>100% of our code is written with AI</h2>
+        <p>
+          I lead a team that develops entirely through AI, spec first. The specification
+          is what we argue about; generating the implementation is the cheap part. That
+          only works because the verification underneath it is serious — tests, type
+          checking, scanning, drift detection, and a deploy that refuses to claim
+          success until it has confirmed the live site is serving the new commit.
+        </p>
+        <p>
+          If that sounds like a claim worth checking, it is.{" "}
+          <Link to="/working-with-ai/">Here is how it actually works</Link>, and{" "}
+          <Link to="/pipeline/">here is the verification</Link> running on this site.
+        </p>
       </section>
 
       <section>

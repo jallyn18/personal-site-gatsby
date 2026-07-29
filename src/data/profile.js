@@ -3,30 +3,30 @@
  *
  * Everything a visitor reads lives in src/data/. Editing this file changes the
  * site; no component needs to be touched.
- *
- * Fields marked TODO are placeholders awaiting real content.
  */
 
 const profile = {
-  name: "TODO: Your Name",
-  // Shown under the name in the hero and used as the page title suffix.
-  title: "Automation Engineer",
-  // One line. This is the sentence a recruiter reads before deciding to scroll.
-  tagline: "TODO: I build the systems that build the systems.",
-  location: "TODO: City, State",
+  name: "Jon Allyn",
+  title: "Lead Systems Engineer",
+  tagline:
+    "I turn infrastructure clickops into peer-reviewable code. My team now writes 100% of it with AI, spec first.",
+  // TODO: add if you want it public — recruiters filter on location.
+  location: "",
 
-  /**
-   * Two or three short paragraphs. Written in first person, no buzzword salad.
-   * Answer: what do you automate, for whom, and what changes when you do?
-   */
   summary: [
-    "TODO: Opening paragraph. What you do and the kind of problem you take on.",
-    "TODO: Second paragraph. How you work, what you have built, what you care about.",
+    "I automate on-premises data center infrastructure for a large automotive manufacturer. At this scale a manual process is not just slow — it is an outage with a delay on it. Most of my job is converting things people click into things people review.",
+    // The AI story deliberately lives in its own section on the home page
+    // rather than here, so the two do not say the same thing twice.
+    "I got here sideways. I started scripting fixes in internal IT, moved into running large-scale compute in data centers, and now I write the code that runs it instead of running it by hand. The through-line is a low tolerance for work a machine should be doing.",
   ],
 
   /**
-   * Public links. Set `primary: true` on the ones worth putting in the header.
-   * Remove any entry you do not want; nothing else references them by name.
+   * Public links. `primary: true` puts them in the header actions and footer.
+   *
+   * There is deliberately no email here. If you want one, add:
+   *   { label: "Email", href: "mailto:you@jon-allyn.com", handle: "you@jon-allyn.com", primary: true }
+   * A domain-based address is worth the five minutes; a resume site with no way
+   * to start a conversation makes a recruiter work harder than they will.
    */
   links: [
     {
@@ -37,28 +37,18 @@ const profile = {
     },
     {
       label: "LinkedIn",
-      href: "https://www.linkedin.com/in/TODO",
-      handle: "TODO",
-      primary: true,
-    },
-    {
-      label: "Email",
-      href: "mailto:TODO@example.com",
-      handle: "TODO@example.com",
+      href: "https://www.linkedin.com/in/jon-allyn-08263141/",
+      handle: "jon-allyn",
       primary: true,
     },
   ],
 
   /**
-   * Optional. Drop a PDF at static/resume.pdf and this button appears.
-   * Set to null to hide it.
+   * Drop a PDF at static/resume.pdf and set this to "/resume.pdf" to show the
+   * download button. Left null so the button does not 404.
    */
-  resumePdf: "/resume.pdf",
+  resumePdf: null,
 
-  /**
-   * The two repositories behind this site. Shown on the pipeline page so a
-   * visitor can read the code rather than take the diagram on faith.
-   */
   repositories: {
     site: "https://github.com/jallyn18/personal-site-gatsby",
     automation: "https://github.com/jallyn18/personal-site-automation",

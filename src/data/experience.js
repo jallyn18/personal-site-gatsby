@@ -1,47 +1,61 @@
 /**
  * Work history.
  *
- * `highlights` should describe outcomes, not duties. "Responsible for CI/CD"
- * says nothing; "cut deploy time from 40 minutes to 6 and removed the manual
- * approval step" says you did something. Numbers where you have them,
- * honest qualitative statements where you do not.
+ * Highlights describe outcomes, not duties. Fields marked TODO are ones I
+ * could not fill in for you — dates, and the employers for the earlier roles.
+ * Swap "Large automotive manufacturer" for the real name if you are comfortable
+ * naming it; a named employer is worth more to a recruiter than a category.
  */
 
 const experience = [
   {
-    role: "TODO: Automation Engineer",
-    company: "TODO: Company",
-    // Keep vague if you would rather not name the employer, e.g. "Mid-size healthcare provider"
+    role: "Lead Systems Engineer",
+    company: "Large automotive manufacturer",
     location: "TODO: City, State (or Remote)",
-    start: "TODO: 2023",
+    start: "TODO: 20XX",
     end: "Present",
     summary:
-      "TODO: One sentence on scope — what you own, team size, what the estate looks like.",
+      "Automation and infrastructure as code for on-premises data center infrastructure. I lead a team that develops 100% of its code with AI using spec-driven development.",
     highlights: [
-      "TODO: An outcome with a number in it.",
-      "TODO: Something you built that outlived the ticket that started it.",
-      "TODO: A problem you diagnosed that nobody else had spotted.",
+      "Replaced manual DNS record management with an infrastructure-as-code workflow integrated with ServiceNow, taking human-error incidents to near zero and making every change peer-reviewable.",
+      "Built tag automation linking workloads and components to workforce-management portfolios and teams, giving security and incident response reliable ownership data instead of a hunt.",
+      "Automated six-year hardware refresh financial forecasting, cutting a process that took weeks down to days.",
+      "Lead the team's move to spec-driven, AI-assisted development, where the specification and the review carry the engineering rather than the typing.",
     ],
-    stack: ["Terraform", "Ansible", "GitHub Actions", "Python", "AWS"],
+    stack: ["Terraform", "Ansible", "Python", "GitHub Actions", "RHEL", "ServiceNow"],
   },
   {
-    role: "TODO: Previous Role",
+    role: "TODO: title — data center compute",
     company: "TODO: Company",
     location: "TODO: City, State",
-    start: "TODO: 2021",
-    end: "TODO: 2023",
-    summary: "TODO: One sentence on scope.",
-    highlights: ["TODO: Outcome.", "TODO: Outcome."],
-    stack: ["TODO"],
+    start: "TODO: 20XX",
+    end: "TODO: 20XX",
+    summary:
+      "Managed large-scale compute in data centers, moving from operating infrastructure by hand toward operating it through code.",
+    highlights: [
+      "TODO: An outcome from this role — scale you were responsible for, a migration you ran, a process you replaced.",
+    ],
+    stack: ["TODO: what you actually used here"],
+  },
+  {
+    role: "TODO: title — internal IT",
+    company: "TODO: Company",
+    location: "TODO: City, State",
+    start: "TODO: 20XX",
+    end: "TODO: 20XX",
+    summary:
+      "Where the scripting habit started: automating the repetitive parts of internal IT rather than repeating them.",
+    highlights: [
+      "TODO: Optional. Roles this far back can be a single line, or dropped entirely.",
+    ],
+    stack: ["Bash", "Python"],
   },
 ];
 
 /**
- * Education. Delete the array contents if you would rather lead with
- * experience — the section hides itself when empty.
+ * Education. The section hides itself while this is empty.
+ * Format: { credential: "B.S. ...", institution: "...", year: "20XX" }
  */
-export const education = [
-  // { credential: "B.S. Computer Science", institution: "TODO University", year: "TODO" },
-];
+export const education = [];
 
 export default experience;
