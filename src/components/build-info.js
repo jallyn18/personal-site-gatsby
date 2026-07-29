@@ -80,10 +80,12 @@ const BuildInfo = () => {
         </div>
       </dl>
 
+      {/* A local deploy via scripts/deploy.sh passes real git metadata, so the
+          commit above may well be genuine — but there is no workflow run to
+          link to, and saying so is more accurate than calling it a placeholder. */}
       {!build.ci ? (
         <p className="small muted">
-          This is a local development build, so the values above are placeholders. On
-          the deployed site they point at the actual commit and workflow run.
+          Built outside GitHub Actions, so there is no pipeline run to link to.
         </p>
       ) : null}
     </>
