@@ -1,0 +1,156 @@
+name: deploy
+
+# Builds the site and publishes it to S3 + CloudFront.
+#
+# The bucket name, distribution id and public URL are read from SSM Parameter
+# Store at run time. They are outputs of the Terraform in personal-site-automation,
+# so renaming a bucket or replacing the distribution needs no change here.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # OIDC; there are no AWS keys in this repository
+
+env:
+  AWS_REGION: us-east-1
+  SSM_PREFIX: /personal-site
+  NODE_VERSION: "22"
+
+# One deploy at a time, and never cancel one midway: a cancelled run can leave
+# the bucket holding half of one build and half of another.
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-session-name: gha-deploy-${{ github.run_id }}
+
+      - name: Resolve deploy target from SSM
+        id: target
+        run: |
+          set -euo pipefail
+          bucket=$(aws ssm get-parameter --name "${SSM_PREFIX}/site_bucket" --query 'Parameter.Value' --output text)
+          distribution=$(aws ssm get-parameter --name "${SSM_PREFIX}/distribution_id" --query 'Parameter.Value' --output text)
+          site_url=$(aws ssm get-parameter --name "${SSM_PREFIX}/site_url" --query 'Parameter.Value' --output text)
+
+          echo "bucket=${bucket}" >> "$GITHUB_OUTPUT"
+          echo "distribution=${distribution}" >> "$GITHUB_OUTPUT"
+          echo "site_url=${site_url}" >> "$GITHUB_OUTPUT"
+
+      # GITHUB_SHA and friends are already in the environment; gatsby-config.js
+      # reads them so the commit shown on /pipeline/ is this commit.
+      - name: Build
+        env:
+          SITE_URL: ${{ steps.target.outputs.site_url }}
+          NODE_ENV: production
+        run: npm run build
+
+      # Two passes. Content-hashed assets can be cached forever; HTML and page
+      # data must revalidate or a visitor keeps the previous deploy until their
+      # browser cache expires.
+      - name: Upload immutable assets
+        run: |
+          aws s3 sync public/ "s3://${{ steps.target.outputs.bucket }}/" \
+            --delete \
+            --no-progress \
+            --exclude "*.html" \
+            --exclude "page-data/*" \
+            --exclude "*.json" \
+            --exclude "*.xml" \
+            --exclude "*.txt" \
+            --exclude "sw.js" \
+            --cache-control "public,max-age=31536000,immutable"
+
+      - name: Upload revalidated files
+        run: |
+          aws s3 sync public/ "s3://${{ steps.target.outputs.bucket }}/" \
+            --delete \
+            --no-progress \
+            --exclude "*" \
+            --include "*.html" \
+            --include "page-data/*" \
+            --include "*.json" \
+            --include "*.xml" \
+            --include "*.txt" \
+            --include "sw.js" \
+            --cache-control "public,max-age=0,must-revalidate"
+
+      - name: Invalidate CloudFront
+        id: invalidate
+        run: |
+          set -euo pipefail
+          id=$(aws cloudfront create-invalidation \
+            --distribution-id "${{ steps.target.outputs.distribution }}" \
+            --paths "/*" \
+            --query 'Invalidation.Id' --output text)
+          echo "id=${id}" >> "$GITHUB_OUTPUT"
+
+      - name: Wait for invalidation
+        run: |
+          aws cloudfront wait invalidation-completed \
+            --distribution-id "${{ steps.target.outputs.distribution }}" \
+            --id "${{ steps.invalidate.outputs.id }}"
+
+      # A deploy that reports success without checking is a deploy you find out
+      # about from someone else. This fetches the live URL and asserts the
+      # commit rendered on the page is the commit we just built.
+      - name: Verify the live site serves this commit
+        env:
+          SITE_URL: ${{ steps.target.outputs.site_url }}
+        run: |
+          set -euo pipefail
+          short_sha="${GITHUB_SHA:0:7}"
+
+          for attempt in 1 2 3 4 5; do
+            body=$(curl -fsSL --max-time 20 "${SITE_URL}/pipeline/" || true)
+
+            if printf '%s' "$body" | grep -q "$short_sha"; then
+              echo "Live site is serving ${short_sha}."
+              exit 0
+            fi
+
+            echo "Attempt ${attempt}: ${short_sha} not visible yet, retrying..."
+            sleep 10
+          done
+
+          echo "::error::Deployed, but ${short_sha} never appeared on the live site."
+          exit 1
+
+      - name: Summary
+        if: always()
+        env:
+          SITE_URL: ${{ steps.target.outputs.site_url }}
+        run: |
+          {
+            echo "## Deploy"
+            echo
+            echo "| | |"
+            echo "| --- | --- |"
+            echo "| Site | ${SITE_URL} |"
+            echo "| Commit | \`${GITHUB_SHA:0:7}\` |"
+            echo "| Bucket | \`${{ steps.target.outputs.bucket }}\` |"
+            echo "| Distribution | \`${{ steps.target.outputs.distribution }}\` |"
+          } >> "$GITHUB_STEP_SUMMARY"
