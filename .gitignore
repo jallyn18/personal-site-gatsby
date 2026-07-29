@@ -1,0 +1,20 @@
+# Gatsby
+.cache/
+public/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.npm
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Editors / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
