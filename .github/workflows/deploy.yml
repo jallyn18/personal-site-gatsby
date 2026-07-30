@@ -42,9 +42,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Read as a secret, falling back to the variable.
+      #
+      # The role ARN embeds the AWS account id, and the runner prints
+      # `role-to-assume:` in this step's header before any step can register an
+      # ::add-mask::. Secret masking is the only thing that redacts it there, and
+      # on a public repository the header is world-readable. Once the secret
+      # exists, delete the variable.
       - uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN || vars.AWS_DEPLOY_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
           role-session-name: gha-deploy-${{ github.run_id }}
 
@@ -52,6 +59,15 @@ jobs:
         id: target
         run: |
           set -euo pipefail
+          # Mask the account id before any of these values is echoed. The bucket
+          # name embeds it, `aws s3 sync` prints the bucket on every object, and
+          # on a public repository workflow logs are world-readable. add-mask
+          # applies only to this job, which is where the values are used.
+          account_id=$(aws sts get-caller-identity --query 'Account' --output text)
+          case "$account_id" in
+            [0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]) echo "::add-mask::${account_id}" ;;
+          esac
+
           bucket=$(aws ssm get-parameter --name "${SSM_PREFIX}/site_bucket" --query 'Parameter.Value' --output text)
           distribution=$(aws ssm get-parameter --name "${SSM_PREFIX}/distribution_id" --query 'Parameter.Value' --output text)
           site_url=$(aws ssm get-parameter --name "${SSM_PREFIX}/site_url" --query 'Parameter.Value' --output text)
@@ -139,6 +155,8 @@ jobs:
           echo "::error::Deployed, but ${short_sha} never appeared on the live site."
           exit 1
 
+      # The bucket name is deliberately absent: it embeds the AWS account id, and
+      # a step summary is not covered by ::add-mask::, which filters logs only.
       - name: Summary
         if: always()
         env:
@@ -151,6 +169,5 @@ jobs:
             echo "| --- | --- |"
             echo "| Site | ${SITE_URL} |"
             echo "| Commit | \`${GITHUB_SHA:0:7}\` |"
-            echo "| Bucket | \`${{ steps.target.outputs.bucket }}\` |"
             echo "| Distribution | \`${{ steps.target.outputs.distribution }}\` |"
           } >> "$GITHUB_STEP_SUMMARY"

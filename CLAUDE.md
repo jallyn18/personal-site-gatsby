@@ -104,6 +104,13 @@ no site source changed.
   design.
 - **No third-party scripts.** No analytics, no fonts from a CDN, no embeds. The
   visit counter is the entire tracking appetite (spec §6).
+- **No contact address at `jon-allyn.com`.** The domain publishes a null MX and
+  `v=spf1 -all`, so mail to it bounces by design (NFR-5). Adding a `mailto:` at
+  that domain produces a contact link that silently fails.
+- **`::add-mask::` filters logs, not step summaries**, and only in the job that
+  registers it. The deploy masks the account id because the bucket name embeds
+  it and `aws s3 sync` prints the bucket on every object. Do not add the bucket
+  to `$GITHUB_STEP_SUMMARY`. This repository is public, so its logs are too.
 
 ## Working here
 
