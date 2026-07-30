@@ -42,9 +42,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Read as a secret, falling back to the variable.
+      #
+      # The role ARN embeds the AWS account id, and the runner prints
+      # `role-to-assume:` in this step's header before any step can register an
+      # ::add-mask::. Secret masking is the only thing that redacts it there, and
+      # on a public repository the header is world-readable. Once the secret
+      # exists, delete the variable.
       - uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN || vars.AWS_DEPLOY_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
           role-session-name: gha-deploy-${{ github.run_id }}
 
