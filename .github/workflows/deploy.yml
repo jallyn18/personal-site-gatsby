@@ -52,6 +52,15 @@ jobs:
         id: target
         run: |
           set -euo pipefail
+          # Mask the account id before any of these values is echoed. The bucket
+          # name embeds it, `aws s3 sync` prints the bucket on every object, and
+          # on a public repository workflow logs are world-readable. add-mask
+          # applies only to this job, which is where the values are used.
+          account_id=$(aws sts get-caller-identity --query 'Account' --output text)
+          case "$account_id" in
+            [0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]) echo "::add-mask::${account_id}" ;;
+          esac
+
           bucket=$(aws ssm get-parameter --name "${SSM_PREFIX}/site_bucket" --query 'Parameter.Value' --output text)
           distribution=$(aws ssm get-parameter --name "${SSM_PREFIX}/distribution_id" --query 'Parameter.Value' --output text)
           site_url=$(aws ssm get-parameter --name "${SSM_PREFIX}/site_url" --query 'Parameter.Value' --output text)
@@ -139,6 +148,8 @@ jobs:
           echo "::error::Deployed, but ${short_sha} never appeared on the live site."
           exit 1
 
+      # The bucket name is deliberately absent: it embeds the AWS account id, and
+      # a step summary is not covered by ::add-mask::, which filters logs only.
       - name: Summary
         if: always()
         env:
@@ -151,6 +162,5 @@ jobs:
             echo "| --- | --- |"
             echo "| Site | ${SITE_URL} |"
             echo "| Commit | \`${GITHUB_SHA:0:7}\` |"
-            echo "| Bucket | \`${{ steps.target.outputs.bucket }}\` |"
             echo "| Distribution | \`${{ steps.target.outputs.distribution }}\` |"
           } >> "$GITHUB_STEP_SUMMARY"

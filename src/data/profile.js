@@ -23,10 +23,17 @@ const profile = {
   /**
    * Public links. `primary: true` puts them in the header actions and footer.
    *
-   * There is deliberately no email here. If you want one, add:
-   *   { label: "Email", href: "mailto:you@jon-allyn.com", handle: "you@jon-allyn.com", primary: true }
-   * A domain-based address is worth the five minutes; a resume site with no way
-   * to start a conversation makes a recruiter work harder than they will.
+   * There is deliberately no email here, and an address at jon-allyn.com is not
+   * an option: the domain publishes a null MX record and `v=spf1 -all`, so it
+   * rejects mail by design (spec NFR-5, terraform/dns.tf). Mail sent to
+   * anything@jon-allyn.com bounces.
+   *
+   * If you want a written contact channel, the choices are an address on a
+   * domain that does accept mail, or LinkedIn. Adding one here looks like:
+   *   { label: "Email", href: "mailto:...", handle: "...", primary: true }
+   *
+   * Leaving it at LinkedIn is the consistent answer, and it keeps a personal
+   * address off a page that harvesters read.
    */
   links: [
     {

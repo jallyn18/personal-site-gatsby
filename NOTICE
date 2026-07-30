@@ -1,0 +1,19 @@
+The MIT licence in LICENSE covers the code in this repository: components,
+build configuration, workflows, scripts and tests. Take it, adapt it, ship your
+own site with it.
+
+It does not cover the written content or the personal information in it.
+
+Specifically excluded, all rights reserved:
+
+  src/data/            professional history, project write-ups, profile
+  src/pages/           prose in the page bodies, in particular
+                       working-with-ai.js
+  static/              any resume or document placed here
+
+Copyright (c) 2026 Jon Allyn.
+
+This is not an attempt to restrict the useful part. It is that the content is a
+description of one person's career, and a copy of it under someone else's name
+is a misrepresentation rather than a reuse. The engineering is the part worth
+borrowing, and it is MIT.
