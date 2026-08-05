@@ -1,54 +1,70 @@
 /**
  * Work history.
  *
- * Highlights describe outcomes, not duties. Fields marked TODO are ones I
- * could not fill in for you — dates, and the employers for the earlier roles.
- * Swap "Large automotive manufacturer" for the real name if you are comfortable
- * naming it; a named employer is worth more to a recruiter than a category.
+ * Every fact here comes from the resume — roles, employers, dates, and the
+ * highlights, which describe outcomes rather than duties.
+ *
+ * TODO: per-role locations. The resume does not state them, and guessing them
+ * would be inventing a fact (FR-4), so they are left empty and the page omits
+ * them. Fill them in if you want them shown; recruiters do filter on location.
  */
 
 const experience = [
   {
-    role: "Lead Systems Engineer",
-    company: "Large automotive manufacturer",
-    location: "TODO: City, State (or Remote)",
-    start: "TODO: 20XX",
+    role: "Sr. Systems Engineer → Lead Systems Engineer",
+    company: "Cox Automotive",
+    location: "",
+    start: "May 2019",
     end: "Present",
     summary:
-      "Automation and infrastructure as code for on-premises data center infrastructure. I lead a team that develops 100% of its code with AI using spec-driven development.",
+      "Architecting and automating a self-service private cloud platform across multiple datacenters. I lead a team that develops 100% of its code with AI using spec-driven development.",
     highlights: [
-      "Replaced manual DNS record management with an infrastructure-as-code workflow integrated with ServiceNow, taking human-error incidents to near zero and making every change peer-reviewable.",
-      "Built tag automation linking workloads and components to workforce-management portfolios and teams, giving security and incident response reliable ownership data instead of a hunt.",
-      "Automated six-year hardware refresh financial forecasting, cutting a process that took weeks down to days.",
-      "Lead the team's move to spec-driven, AI-assisted development, where the specification and the review carry the engineering rather than the typing.",
+      "Architected and automated server provisioning for environments spanning multiple datacenters with more than 1,000 hosts, replacing manual build processes with declarative, repeatable pipelines.",
+      "Instantiated a self-service private cloud platform on vRealize Automation — the direct predecessor to VMware Cloud Foundation Automation — letting internal customers provision virtual machine workloads on demand.",
+      "Authored custom cloud templates, catalog items with approval policies, and vRealize Orchestrator workflows to extend the platform beyond its out-of-the-box capability.",
+      "Adopted event-driven solutions for workload and component tracking in a CMDB, keeping ownership and portfolio metadata accurate without manual upkeep.",
+      "Lead multiple projects on automation maturation — infrastructure as code, immutability, GitOps — and established the standards, reusable patterns and documentation other engineers build on.",
+      "Lead a team that develops 100% of its code with AI, specification-first, backed by automated testing, type checking, security scanning and drift detection.",
     ],
-    stack: ["Terraform", "Ansible", "Python", "GitHub Actions", "RHEL", "ServiceNow"],
+    stack: [
+      "Terraform",
+      "Ansible",
+      "Python",
+      "PowerShell",
+      "GitHub Actions",
+      "vSphere",
+      "vRealize Automation",
+      "vRealize Orchestrator",
+    ],
   },
   {
-    role: "TODO: title — data center compute",
-    company: "TODO: Company",
-    location: "TODO: City, State",
-    start: "TODO: 20XX",
-    end: "TODO: 20XX",
+    role: "Sr. Systems Engineer → Lead Systems Engineer",
+    company: "MyWebGrocer",
+    location: "",
+    start: "August 2017",
+    end: "May 2019",
     summary:
-      "Managed large-scale compute in data centers, moving from operating infrastructure by hand toward operating it through code.",
+      "Reliability engineering for high-transaction workloads across primary and DR datacenters.",
     highlights: [
-      "TODO: An outcome from this role — scale you were responsible for, a migration you ran, a process you replaced.",
+      "Worked with development teammates to establish SRE practices for system reliability and performance, and developed KPIs measuring reliability against customer SLAs.",
+      "Leveraged Prometheus and Grafana for observability in both the private cloud and Azure.",
+      "Managed compute (Dell) and storage (EMC) configurations supporting high-transaction OLTP workloads across primary and DR datacenters.",
     ],
-    stack: ["TODO: what you actually used here"],
+    stack: ["Prometheus", "Grafana", "Azure", "Dell", "EMC"],
   },
   {
-    role: "TODO: title — internal IT",
-    company: "TODO: Company",
-    location: "TODO: City, State",
-    start: "TODO: 20XX",
-    end: "TODO: 20XX",
+    role: "IT Systems Engineer",
+    company: "Dealer.com",
+    location: "",
+    start: "Apr 2013",
+    end: "August 2017",
     summary:
-      "Where the scripting habit started: automating the repetitive parts of internal IT rather than repeating them.",
+      "Corporate IT datacenters and applications, across primary on-site and DR locations.",
     highlights: [
-      "TODO: Optional. Roles this far back can be a single line, or dropped entirely.",
+      "Administered Microsoft Active Directory, Exchange and DNS, plus developer tooling including Atlassian Confluence and Jira.",
+      "Contributed to workload consolidation and migration projects, domain migrations, and campus networking projects.",
     ],
-    stack: ["Bash", "Python"],
+    stack: ["Active Directory", "Exchange", "DNS", "Confluence", "Jira"],
   },
 ];
 
@@ -56,6 +72,12 @@ const experience = [
  * Education. The section hides itself while this is empty.
  * Format: { credential: "B.S. ...", institution: "...", year: "20XX" }
  */
-export const education = [];
+export const education = [
+  {
+    credential: "B.S. Computer Networking and Information Security",
+    institution: "Champlain College, Burlington VT",
+    year: "2007–2011",
+  },
+];
 
 export default experience;

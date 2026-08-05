@@ -1,25 +1,46 @@
 /**
  * Skills, grouped by what the tool is for rather than by vendor.
  *
- * Only things worth being questioned on in an interview.
+ * Taken from the resume. Only things worth being questioned on in an interview.
  */
 
 const skills = [
   {
-    group: "Infrastructure as Code",
-    items: ["Terraform", "Ansible"],
+    group: "VMware and private cloud",
+    items: [
+      "vSphere / ESXi",
+      "vRealize Automation",
+      "Cloud templates",
+      "Service catalogs and approval policies",
+      "vRealize Orchestrator",
+      "vRealize Operations",
+    ],
   },
   {
-    group: "CI/CD and version control",
-    items: ["GitHub Actions", "GitHub", "Pull-request workflows"],
+    group: "Automation and IaC",
+    items: ["Terraform", "Ansible", "GitHub Actions", "GitOps", "Docker", "Kubernetes"],
+  },
+  {
+    group: "Languages and scripting",
+    items: ["Python", "PowerShell", "JavaScript"],
+  },
+  {
+    group: "Integrations",
+    items: [
+      "ServiceNow",
+      "Active Directory",
+      "REST APIs",
+      "RabbitMQ",
+      "Event-driven CMDB workflows",
+    ],
   },
   {
     group: "Platforms",
-    items: ["On-premises private cloud", "RHEL", "AWS"],
+    items: ["RHEL", "Windows Server", "SQL Server", "Redis", "Elastic", "AWS", "Azure"],
   },
   {
-    group: "Languages",
-    items: ["Python", "Bash"],
+    group: "Monitoring and observability",
+    items: ["New Relic", "Splunk", "PagerDuty", "Prometheus", "Grafana"],
   },
   {
     group: "Practice",
@@ -36,6 +57,12 @@ const skills = [
  * Certifications. The section hides itself while this is empty.
  * Format: { name: "...", issuer: "...", year: "2024" }
  */
-export const certifications = [];
+export const certifications = [
+  {
+    name: "AWS Certified Cloud Practitioner",
+    issuer: "Amazon Web Services",
+    year: "2024",
+  },
+];
 
 export default skills;
